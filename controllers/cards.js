@@ -1,15 +1,17 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/not-found-error');
+const AccessError = require('../errors/access-error');
 
-module.exports.getAllCards = async (req, res) => {
+module.exports.getAllCards = async (req, res, next) => {
   try {
     const card = await Card.find({});
     return res.send(card);
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    next(err);
   }
 };
 
-module.exports.createCard = async (req, res) => {
+module.exports.createCard = async (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
@@ -17,38 +19,30 @@ module.exports.createCard = async (req, res) => {
     const card = await Card.create({ name, link, owner });
     return res.send(card);
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Ошибка валидации' });
-    } else {
-      res.status(500).send({ message: err.message });
-    }
+    next(err);
   }
 };
 
-module.exports.deleteCard = async (req, res) => {
+module.exports.deleteCard = async (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
 
   try {
     const card = await Card.findById(cardId);
     if (card === null) {
-      res.status(404).send({ message: 'Объект не найден' });
+      throw new NotFoundError('Объект не найден');
     } else if (!(card.owner.toString() === userId)) {
-      res.status(403).send({ message: 'Вы не можете удалить чужую карточку' });
+      throw new AccessError('Вы не можете удалить чужую карточку');
     } else {
       await card.remove();
       return res.send(card);
     }
   } catch (err) {
-    if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Ошибка валидации ID' });
-    } else {
-      res.status(500).send({ message: err.message });
-    }
+    next(err);
   }
 };
 
-module.exports.likeCard = async (req, res) => {
+module.exports.likeCard = async (req, res, next) => {
   const { cardId } = req.params;
   try {
     const cardToLike = await Card.findByIdAndUpdate(
@@ -57,20 +51,16 @@ module.exports.likeCard = async (req, res) => {
       { new: true },
     );
     if (cardToLike === null) {
-      res.status(404).send({ message: 'Объект не найден' });
+      throw new NotFoundError('Объект не найден');
     } else {
       return res.send(cardToLike);
     }
   } catch (err) {
-    if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Ошибка валидации ID' });
-    } else {
-      res.status(500).send({ message: err.message });
-    }
+    next(err);
   }
 };
 
-module.exports.dislikeCard = async (req, res) => {
+module.exports.dislikeCard = async (req, res, next) => {
   const { cardId } = req.params;
   try {
     const cardToDislike = await Card.findByIdAndUpdate(
@@ -79,15 +69,11 @@ module.exports.dislikeCard = async (req, res) => {
       { new: true },
     );
     if (cardToDislike === null) {
-      res.status(404).send({ message: 'Объект не найден' });
+      throw new NotFoundError('Объект не найден');
     } else {
       return res.send(cardToDislike);
     }
   } catch (err) {
-    if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Ошибка валидации ID' });
-    } else {
-      res.status(500).send({ message: err.message });
-    }
+    next(err);
   }
 };

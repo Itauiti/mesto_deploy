@@ -1,10 +1,13 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-error');
+const AuthError = require('../errors/auth-error');
+const PasswordError = require('../errors/password-error');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-module.exports.createUser = async (req, res) => {
+module.exports.createUser = async (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -22,20 +25,14 @@ module.exports.createUser = async (req, res) => {
         _id: user._id,
       });
     } else {
-      res.status(400).send({ message: 'Пароль должен состоять не менее чем из 8 символов' });
+      next(new PasswordError('Пароль должен состоять не менее чем из 8 символов'));
     }
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Ошибка валидации' });
-    } else if (err.code === 11000 && err.name === 'MongoError') {
-      res.status(409).send({ message: 'Такой пользователь уже существует' });
-    } else {
-      res.status(500).send({ message: err.message });
-    }
+    next(err);
   }
 };
 
-module.exports.login = async (req, res) => {
+module.exports.login = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findUserByCredentials(email, password);
@@ -48,37 +45,33 @@ module.exports.login = async (req, res) => {
       });
     return res.send({ token });
   } catch (err) {
-    res.status(401).send({ message: 'Неверный логин или пароль' });
+    next(new AuthError('Неверный логин или пароль'));
   }
 };
 
-module.exports.getAllUsers = async (req, res) => {
+module.exports.getAllUsers = async (req, res, next) => {
   try {
     const allUsers = await User.find({});
     return res.send(allUsers);
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    next(err);
   }
 };
 
-module.exports.getUser = async (req, res) => {
+module.exports.getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
     if (user === null) {
-      res.status(404).send({ message: 'Нет такого пользователя' });
+      throw new NotFoundError('Нет пользователя с таким id');
     } else {
       return res.send(user);
     }
   } catch (err) {
-    if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Ошибка валидации ID' });
-    } else {
-      res.status(500).send({ message: err.message });
-    }
+    next(err);
   }
 };
 
-module.exports.updateProfile = async (req, res) => {
+module.exports.updateProfile = async (req, res, next) => {
   const { name, about } = req.body;
 
   try {
@@ -92,20 +85,16 @@ module.exports.updateProfile = async (req, res) => {
       },
     );
     if (userToUpdate === null) {
-      res.status(404).send({ message: 'Нет такого пользователя' });
+      throw new NotFoundError('Нет пользователя с таким id');
     } else {
       return res.send(userToUpdate);
     }
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Ошибка валидации' });
-    } else {
-      res.status(500).send({ message: err.message });
-    }
+    next(err);
   }
 };
 
-module.exports.updateAvatar = async (req, res) => {
+module.exports.updateAvatar = async (req, res, next) => {
   const { avatar } = req.body;
 
   try {
@@ -119,15 +108,11 @@ module.exports.updateAvatar = async (req, res) => {
       },
     );
     if (userToUpdate === null) {
-      res.status(404).send({ message: 'Нет такого пользователя' });
+      throw new NotFoundError('Нет пользователя с таким id');
     } else {
       return res.send(userToUpdate);
     }
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Ошибка валидации' });
-    } else {
-      res.status(500).send({ message: err.message });
-    }
+    next(err);
   }
 };

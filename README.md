@@ -32,6 +32,8 @@ Node.js, express.js, MongoDBб, ES6, OOP, CSS3, HTML5, BEM
 - [cookie-parser](https://www.npmjs.com/package/cookie-parser)
 - [dotenv](https://www.npmjs.com/package/dotenv)
 - [joi-objectid](https://www.npmjs.com/package/joi-objectid)
+- [winston](https://www.npmjs.com/package/winston)
+- [express-winston](https://www.npmjs.com/package/express-winston)
 - mongoose
 
 ## Инструкции по запуску:

@@ -5,7 +5,11 @@
 ## Основной функционал: 
 1. Создан сервер для проекта Mesto (вебпак проекта https://github.com/Itauiti/webpack-project.git)
 2. Работа с БД - MongoDB (включая связи между схемами)
-3. Настроены роутеры: 
+3. Добавлена централизованная обработка ошибок
+4. Добавлена валидация приходящих на сервер данных
+5. Настроен сбор логов
+6. Создан удаленный сервер
+3. Роутеры: 
 - GET /users — возвращает всех пользователей
 - GET /users/:userId - возвращает пользователя по _id
 - POST /users — создаёт пользователя
@@ -17,6 +21,11 @@
 - PUT /cards/:cardId/likes — поставить лайк карточке
 - DELETE /cards/:cardId/likes — убрать лайк с карточки
 
+## Доменное имя:
+itauiti.ru (www.itauiti.ru)
+
+## Публичный IP-адрес:
+84.201.145.222
 
 ## Стэк технологий:
 Node.js, express.js, MongoDBб, ES6, OOP, CSS3, HTML5, BEM
@@ -31,7 +40,6 @@ Node.js, express.js, MongoDBб, ES6, OOP, CSS3, HTML5, BEM
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - [cookie-parser](https://www.npmjs.com/package/cookie-parser)
 - [dotenv](https://www.npmjs.com/package/dotenv)
-- [joi-objectid](https://www.npmjs.com/package/joi-objectid)
 - [winston](https://www.npmjs.com/package/winston)
 - [express-winston](https://www.npmjs.com/package/express-winston)
 - mongoose

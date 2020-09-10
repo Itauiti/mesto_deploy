@@ -1,15 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
 const { celebrate, Joi, errors } = require('celebrate');
 const rateLimit = require('express-rate-limit');
 
 const limiter = rateLimit({
   windowMs: 25 * 60 * 1000,
-  max: 100,
+  max: 120,
 });
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -77,7 +77,6 @@ app.use((err, req, res, next) => {
     message = 'Такой пользователь уже существует';
   }
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-  // next();
 });
 app.use((req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });

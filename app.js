@@ -18,6 +18,7 @@ const usersRouter = require('./routes/users');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 const validationUrl = require('./validation/validationUrl');
+const NotFoundError = require('./errors/not-found-error');
 
 const { PORT = 3000 } = process.env;
 
@@ -61,6 +62,9 @@ app.use('/cards', cardsRouter);
 app.use(errorLogger);
 
 app.use(errors());
+app.use((req, res, next) => {
+  next(new NotFoundError('Запрашиваемый ресурс не найден'));
+});
 app.use((err, req, res, next) => {
   let { statusCode = 500, message } = err;
 
@@ -77,9 +81,7 @@ app.use((err, req, res, next) => {
     message = 'Такой пользователь уже существует';
   }
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-});
-app.use((req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+  next();
 });
 
 app.listen(PORT, () => {

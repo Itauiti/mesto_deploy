@@ -42,6 +42,7 @@ Node.js, express.js, MongoDBб, ES6, OOP, CSS3, HTML5, BEM
 - [dotenv](https://www.npmjs.com/package/dotenv)
 - [winston](https://www.npmjs.com/package/winston)
 - [express-winston](https://www.npmjs.com/package/express-winston)
+- [joi-objectid](https://www.npmjs.com/package/joi-objectid)
 - mongoose
 
 ## Инструкции по запуску:

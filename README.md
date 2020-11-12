@@ -1,6 +1,6 @@
 
 ## О проекте:
-Учебный проект в ЯндексПрактикуме по основам бэкэнда (node.js)
+Итоговый учебный проект в ЯндексПрактикуме по основам бэкэнда (node.js)
 
 ## Основной функционал: 
 1. Создан сервер для проекта Mesto (вебпак проекта https://github.com/Itauiti/webpack-project.git)
@@ -26,10 +26,10 @@
 itauiti.ru (www.itauiti.ru)
 
 ## Публичный IP-адрес:
-84.201.145.222
+178.154.232.194
 
 ## Стэк технологий:
-Node.js, express.js, MongoDBб, ES6, OOP, CSS3, HTML5, BEM
+Node.js, express.js, MongoDB
 
 ## Пакеты, которые используются в сборках:
 - [body-parser](https://www.npmjs.com/package/body-parser)
@@ -45,6 +45,9 @@ Node.js, express.js, MongoDBб, ES6, OOP, CSS3, HTML5, BEM
 - [express-winston](https://www.npmjs.com/package/express-winston)
 - [joi-objectid](https://www.npmjs.com/package/joi-objectid)
 - mongoose
+
+## Инструкции к использованию:
+Отправлять запросы через Postman на указанные роуты
 
 ## Инструкции по запуску:
 - Скачать или склонировать репозитори
